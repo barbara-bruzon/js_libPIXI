@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -14,36 +14,36 @@
         const app = new PIXI.Application({ background: '#1099bb' });
         document.body.appendChild(app.view);
 
-        const container = new PIXI.Container();
+        // Scale mode for all textures, will retain pixelation
+        PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
 
-        app.stage.addChild(container);
+        const sprite = PIXI.Sprite.from('img/abelha.png');
 
-        // Create a new texture
-        const texture = PIXI.Texture.from('img/abelha.png');
+        // Set the initial position
+        sprite.anchor.set(0.5);
+        sprite.x = app.screen.width / 2;
+        sprite.y = app.screen.height / 2;
 
-        // Create a 5x5 grid of bunnies
-        for (let i = 0; i < 25; i++) {
-            const bunny = new PIXI.Sprite(texture);
-            bunny.anchor.set(0.5);
-            bunny.x = (i % 5) * 40;
-            bunny.y = Math.floor(i / 5) * 40;
-            container.addChild(bunny);
+        // Opt-in to interactivity
+        sprite.interactive = true;
+
+        // Shows hand cursor
+        sprite.cursor = 'pointer';
+
+        // Pointers normalize touch and mouse
+        sprite.on('pointerdown', onClick);
+
+        // Alternatively, use the mouse & touch events:
+        // sprite.on('click', onClick); // mouse-only
+        // sprite.on('tap', onClick); // touch-only
+
+        app.stage.addChild(sprite);
+
+        function onClick() {
+            sprite.scale.x *= 1.25;
+            sprite.scale.y *= 1.25;
         }
 
-        // Move container to the center
-        container.x = app.screen.width / 2;
-        container.y = app.screen.height / 2;
-
-        // Center bunny sprite in local container coordinates
-        container.pivot.x = container.width / 2;
-        container.pivot.y = container.height / 2;
-
-        // Listen for animate update
-        app.ticker.add((delta) => {
-            // rotate the container!
-            // use delta to create frame-independent transform
-            container.rotation -= 0.01 * delta;
-        });
     </script>
 </body>
 
